@@ -1,0 +1,139 @@
+{
+  "_comment": "Single source of truth for RevenueCat configuration. Edit this file, then run: REVENUECAT_API_KEY=<v2-key> node scripts/sync-revenuecat.js",
+  "projectId": "proja7ca02ab",
+
+  "apps": [
+    {
+      "id": "appf85acaf974",
+      "name": "Credibility Radar (App Store)",
+      "type": "app_store",
+      "bundleId": "com.credibilityradar.app"
+    },
+    {
+      "id": "appaed31cd059",
+      "name": "Credibility Radar (Play Store)",
+      "type": "play_store",
+      "packageName": "com.credibilityradar.app"
+    }
+  ],
+
+  "_legacyApps": [
+    {
+      "_comment": "Wrong bundle ID apps — products from these should be detached from entitlements/packages",
+      "id": "app0538c844ee",
+      "name": "Credibility Radar iOS (LEGACY)",
+      "type": "app_store",
+      "bundleId": "com.blink.expostarter"
+    },
+    {
+      "id": "app1d5da09b28",
+      "name": "Credibility Radar Android (LEGACY)",
+      "type": "play_store",
+      "packageName": "com.blink.expostarter"
+    }
+  ],
+
+  "products": [
+    {
+      "id": "prod99d33fe219",
+      "appId": "appf85acaf974",
+      "displayName": "Monthly Pro (iOS)",
+      "storeIdentifier": "pro_monthly_ios",
+      "type": "subscription"
+    },
+    {
+      "id": "prodc835556d1c",
+      "appId": "appf85acaf974",
+      "displayName": "Annual Pro (iOS)",
+      "storeIdentifier": "pro_annual_ios",
+      "type": "subscription"
+    },
+    {
+      "id": "prod80346d2c81",
+      "appId": "appaed31cd059",
+      "displayName": "Monthly Pro (Android)",
+      "storeIdentifier": "pro_monthly:monthly-base-plan",
+      "type": "subscription"
+    },
+    {
+      "id": "prod0f689b8f2b",
+      "appId": "appaed31cd059",
+      "displayName": "Annual Pro (Android)",
+      "storeIdentifier": "pro_annual:annual-base-plan",
+      "type": "subscription"
+    }
+  ],
+
+  "_legacyProducts": [
+    {
+      "_comment": "Products on wrong-bundle apps — safe to ignore, but should be detached from entitlements",
+      "id": "prod1a38442c04",
+      "appId": "app0538c844ee",
+      "displayName": "Monthly Pro (iOS) — LEGACY",
+      "storeIdentifier": "pro_monthly_ios"
+    },
+    {
+      "id": "prod8b5015e581",
+      "appId": "app0538c844ee",
+      "displayName": "Annual Pro (iOS) — LEGACY",
+      "storeIdentifier": "pro_annual_ios"
+    },
+    {
+      "id": "prodca08e7b8b6",
+      "appId": "app1d5da09b28",
+      "displayName": "Monthly Pro (Android) — LEGACY",
+      "storeIdentifier": "pro_monthly:monthly-base-plan"
+    },
+    {
+      "id": "prod658fe680e3",
+      "appId": "app1d5da09b28",
+      "displayName": "Annual Pro (Android) — LEGACY",
+      "storeIdentifier": "pro_annual:annual-base-plan"
+    }
+  ],
+
+  "entitlements": [
+    {
+      "id": "entl26655bc540",
+      "lookupKey": "pro_access",
+      "displayName": "Pro Access",
+      "attachedProductIds": [
+        "prod99d33fe219",
+        "prodc835556d1c",
+        "prod80346d2c81",
+        "prod0f689b8f2b"
+      ]
+    }
+  ],
+
+  "offerings": [
+    {
+      "id": "ofrnge08a6f5a6f",
+      "lookupKey": "default",
+      "displayName": "Default Offering",
+      "isCurrent": true,
+      "packages": [
+        {
+          "id": "pkge4ae117e1c6",
+          "lookupKey": "$rc_monthly",
+          "displayName": "Monthly Plan",
+          "position": 1,
+          "attachedProductIds": {
+            "appf85acaf974": "prod99d33fe219",
+            "appaed31cd059": "prod80346d2c81"
+          }
+        },
+        {
+          "id": "pkged59e448628",
+          "lookupKey": "$rc_annual",
+          "displayName": "Annual Plan",
+          "position": 2,
+          "attachedProductIds": {
+            "appf85acaf974": "prodc835556d1c",
+            "appaed31cd059": "prod0f689b8f2b"
+          }
+        }
+      ]
+    }
+  ]
+}
