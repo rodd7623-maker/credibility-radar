@@ -22,6 +22,8 @@
     "lint": "EXPO_NO_TELEMETRY=1 npx expo lint",
     "prebuild": "EXPO_NO_TELEMETRY=1 npx expo prebuild",
     "rc:sync": "node scripts/sync-revenuecat.js",
+    "phone": "eas build --platform android --profile preview",
+    "ship": "eas build --platform android --profile production --auto-submit",
     "prebuild:clean": "EXPO_NO_TELEMETRY=1 npx expo prebuild --clean"
   },
   "dependencies": {
