@@ -2,7 +2,7 @@
   "expo": {
     "name": "Credibility Radar",
     "slug": "credibility-radar",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "credibilityradar",
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.credibilityradar.app",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Credibility Radar needs microphone access to transcribe voice input for analysis. Audio is processed only when you actively start a recording.",
         "NSPhotoLibraryUsageDescription": "Credibility Radar needs photo library access if you choose to attach screenshots or text-bearing images for analysis.",
@@ -32,7 +32,7 @@
         "backgroundColor": "#0a0a0f"
       },
       "package": "com.credibilityradar.app",
-      "versionCode": 1,
+      "versionCode": 2,
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.INTERNET"
