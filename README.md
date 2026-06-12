@@ -76,4 +76,4 @@ The app will be available at `http://localhost:3000`
 - Use `npm run setup` instead of `npm run install` for Expo packages
 - The project uses Expo Router for navigation
 - Web version runs on port 3000 by default
-- Bun is 2-10x faster than npm for package installation 
+- Bun is 2-10x faster than npm for package installation Production Deployment 
