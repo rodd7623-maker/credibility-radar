@@ -15,6 +15,35 @@ import { CredibilityGauge } from '@/components/CredibilityGauge';
 import { MetricBar } from '@/components/MetricBar';
 import { getTierColor, type Tier } from '@/lib/types';
 
+// Helper function to safely handle Unicode strings
+function normalizeString(str: string): string {
+  return str.normalize('NFC');
+}
+
+// Helper function to get character at index, accounting for surrogate pairs
+function getCharAt(str: string, idx: number): string {
+  const code = str.charCodeAt(idx);
+  // If high surrogate, include the low surrogate
+  if (code >= 0xD800 && code <= 0xDBFF) {
+    return str.slice(idx, idx + 2);
+  }
+  return str.charAt(idx);
+}
+
+// Safe substring that accounts for surrogate pairs
+function safeSlice(str: string, start: number, end?: number): string {
+  if (end === undefined) return str.slice(start);
+  
+  let result = '';
+  for (let i = start; i < end && i < str.length; i++) {
+    const code = str.charCodeAt(i);
+    // Skip low surrogates as they're part of high surrogate pairs
+    if (code >= 0xDC00 && code <= 0xDFFF) continue;
+    result += getCharAt(str, i);
+  }
+  return result;
+}
+
 export default function ResultScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{
@@ -38,22 +67,56 @@ export default function ResultScreen() {
 
   const segments = useMemo(() => {
     if (!fluffPhrases.length) return [{ text, fluff: false }];
-    const parts: Array<{ text: string; fluff: boolean }> = [];
-    let remaining = text;
-    const sorted = [...fluffPhrases].sort((a, b) => b.length - a.length);
-    while (remaining.length > 0) {
-      let hit: { phrase: string; idx: number } | null = null;
-      for (const p of sorted) {
-        if (!p || p.length < 3) continue;
-        const idx = remaining.toLowerCase().indexOf(p.toLowerCase());
-        if (idx !== -1 && (!hit || idx < hit.idx)) hit = { phrase: p, idx };
+    
+    try {
+      const parts: Array<{ text: string; fluff: boolean }> = [];
+      let remaining = normalizeString(text);
+      
+      // Filter and normalize fluff phrases
+      const normalized = fluffPhrases
+        .filter(p => p && p.length >= 3)
+        .map(p => normalizeString(p))
+        .sort((a, b) => b.length - a.length);
+
+      while (remaining.length > 0) {
+        let hit: { phrase: string; idx: number } | null = null;
+        
+        // Find the earliest match among all phrases
+        for (const phrase of normalized) {
+          try {
+            const idx = remaining.toLowerCase().indexOf(phrase.toLowerCase());
+            if (idx !== -1 && (!hit || idx < hit.idx)) {
+              hit = { phrase, idx };
+            }
+          } catch (e) {
+            console.warn('Error matching phrase:', e);
+            continue;
+          }
+        }
+
+        if (!hit) {
+          // No more matches found
+          parts.push({ text: remaining, fluff: false });
+          break;
+        }
+
+        // Add text before the match (if any)
+        if (hit.idx > 0) {
+          parts.push({ text: safeSlice(remaining, 0, hit.idx), fluff: false });
+        }
+
+        // Add the matched fluff phrase
+        parts.push({ text: safeSlice(remaining, hit.idx, hit.idx + hit.phrase.length), fluff: true });
+
+        // Continue with remaining text after the match
+        remaining = safeSlice(remaining, hit.idx + hit.phrase.length);
       }
-      if (!hit) { parts.push({ text: remaining, fluff: false }); break; }
-      if (hit.idx > 0) parts.push({ text: remaining.slice(0, hit.idx), fluff: false });
-      parts.push({ text: remaining.slice(hit.idx, hit.idx + hit.phrase.length), fluff: true });
-      remaining = remaining.slice(hit.idx + hit.phrase.length);
+
+      return parts;
+    } catch (e) {
+      console.error('Segment calculation error:', e);
+      return [{ text, fluff: false }];
     }
-    return parts;
   }, [text, fluffPhrases]);
 
   return (
